@@ -80,7 +80,7 @@ app.post("/api/entries", upload.single("image"), async (req, res, next) => {
     const content = sanitizeText(req.body.content);
 
     if (!nickname || nickname.length > 24) {
-      res.status(400).json({ message: "昵称不能为空，且不能超过 24 个字符。" });
+      res.status(400).json({ message: "撰稿人不能为空，且不能超过 24 个字符。" });
       return;
     }
 

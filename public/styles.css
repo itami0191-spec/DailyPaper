@@ -127,7 +127,7 @@ h2 {
   resize: vertical;
 }
 
-.file-input small {
+.entry-form small {
   color: var(--muted-ink);
   font-weight: 400;
 }
