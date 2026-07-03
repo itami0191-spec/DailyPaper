@@ -65,10 +65,15 @@ function sanitizeText(value) {
   return typeof value === "string" ? value.trim() : "";
 }
 
+function publicEntry(entry) {
+  const { clientId, ...rest } = entry;
+  return rest;
+}
+
 app.get("/api/entries", async (_req, res, next) => {
   try {
     const entries = await readEntries();
-    res.json(entries);
+    res.json(entries.map(publicEntry));
   } catch (error) {
     next(error);
   }
@@ -84,7 +89,7 @@ app.get("/api/my-entries", async (req, res, next) => {
     }
 
     const entries = await readEntries();
-    res.json(entries.filter((entry) => entry.clientId === clientId));
+    res.json(entries.filter((entry) => entry.clientId === clientId).map(publicEntry));
   } catch (error) {
     next(error);
   }
@@ -124,7 +129,7 @@ app.post("/api/entries", upload.single("image"), async (req, res, next) => {
     entries.unshift(entry);
     await writeEntries(entries);
 
-    res.status(201).json(entry);
+    res.status(201).json(publicEntry(entry));
   } catch (error) {
     next(error);
   }
