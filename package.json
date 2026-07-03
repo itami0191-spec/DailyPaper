@@ -1,0 +1,25 @@
+{
+  "name": "daily-paper",
+  "version": "1.0.0",
+  "description": "A newspaper-inspired diary website with text and image uploads.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itami0191-spec/DailyPaper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itami0191-spec/DailyPaper/issues"
+  },
+  "homepage": "https://github.com/itami0191-spec/DailyPaper#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "multer": "^2.2.0"
+  }
+}

@@ -1,0 +1,6 @@
+node_modules/
+
+# Runtime diary content is stored locally by the backend.
+data/entries.json
+data/uploads/*
+!data/uploads/.gitkeep

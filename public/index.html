@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>民生日记 DailyPaper</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="paper-shell">
+      <header class="masthead">
+        <div class="masthead__kicker">个人生活副刊</div>
+        <h1>民生日记</h1>
+        <p>记录今日所见、所闻、所想。版式取意中国报纸，内容由你亲手排印。</p>
+      </header>
+
+      <section class="editor-card" aria-labelledby="editor-title">
+        <div>
+          <p class="section-label">今日来稿</p>
+          <h2 id="editor-title">发表一篇新日记</h2>
+        </div>
+
+        <form id="entry-form" class="entry-form">
+          <label>
+            <span>昵称</span>
+            <input
+              id="nickname"
+              name="nickname"
+              maxlength="24"
+              placeholder="例如：南城读报人"
+              required
+            />
+          </label>
+
+          <label>
+            <span>正文</span>
+            <textarea
+              id="content"
+              name="content"
+              maxlength="2000"
+              placeholder="写下今天值得刊登的一段话..."
+              required
+            ></textarea>
+          </label>
+
+          <label class="file-input">
+            <span>图片</span>
+            <input id="image" name="image" type="file" accept="image/*" />
+            <small>可选，支持常见图片格式，单张不超过 5MB。</small>
+          </label>
+
+          <div class="form-actions">
+            <p id="form-message" role="status" aria-live="polite"></p>
+            <button type="submit">刊登日记</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="front-page" aria-labelledby="entries-title">
+        <div class="front-page__heading">
+          <p class="section-label">日记版</p>
+          <h2 id="entries-title">最新刊登</h2>
+        </div>
+        <div id="entries" class="entries" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <template id="entry-template">
+      <article class="entry">
+        <div class="entry__meta">
+          <span class="entry__nickname"></span>
+          <time></time>
+        </div>
+        <h3></h3>
+        <p class="entry__content"></p>
+        <img alt="" />
+      </article>
+    </template>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
