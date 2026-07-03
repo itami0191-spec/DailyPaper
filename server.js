@@ -74,10 +74,27 @@ app.get("/api/entries", async (_req, res, next) => {
   }
 });
 
+app.get("/api/my-entries", async (req, res, next) => {
+  try {
+    const clientId = sanitizeText(req.query.clientId);
+
+    if (!clientId || clientId.length > 80) {
+      res.status(400).json({ message: "无法识别当前浏览器的投稿记录。" });
+      return;
+    }
+
+    const entries = await readEntries();
+    res.json(entries.filter((entry) => entry.clientId === clientId));
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.post("/api/entries", upload.single("image"), async (req, res, next) => {
   try {
     const nickname = sanitizeText(req.body.nickname);
     const content = sanitizeText(req.body.content);
+    const clientId = sanitizeText(req.body.clientId);
 
     if (!nickname || nickname.length > 24) {
       res.status(400).json({ message: "撰稿人不能为空，且不能超过 24 个字符。" });
@@ -89,9 +106,15 @@ app.post("/api/entries", upload.single("image"), async (req, res, next) => {
       return;
     }
 
+    if (!clientId || clientId.length > 80) {
+      res.status(400).json({ message: "无法识别当前浏览器，请刷新页面后再投稿。" });
+      return;
+    }
+
     const entries = await readEntries();
     const entry = {
       id: crypto.randomUUID(),
+      clientId,
       nickname,
       content,
       imageUrl: req.file ? `/uploads/${req.file.filename}` : null,

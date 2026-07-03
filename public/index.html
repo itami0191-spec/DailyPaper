@@ -12,6 +12,7 @@
         <div class="masthead__kicker">个人生活副刊</div>
         <h1>杭城日报</h1>
         <p>有什么想告诉我的新闻？</p>
+        <div id="date-line" class="date-line" aria-label="今日日期"></div>
       </header>
 
       <section class="editor-card" aria-labelledby="editor-title">
@@ -54,11 +55,13 @@
             <p>
               投稿将印制成实体报纸，赠送给所有投稿者（包括互相不认识的朋友）。请仅提交您愿意被公开的内容。
             </p>
-            <p>您的文字、图片、署名将出现在报纸上，被所有读者看到</p>
-            <p>后台会保存您的投稿，仅用于报纸制作，不作他用</p>
-            <p>您可选择实名、昵称或匿名</p>
-            <p>报纸印刷后内容无法撤回或修改</p>
-            <p>请勿提交他人隐私或未经授权的照片</p>
+            <ol>
+              <li>您的文字、图片、署名将出现在报纸上，被所有读者看到</li>
+              <li>后台会保存您的投稿，仅用于报纸制作，不作他用</li>
+              <li>您可选择实名、昵称或匿名</li>
+              <li>报纸印刷后内容无法撤回或修改</li>
+              <li>请勿提交他人隐私或未经授权的照片</li>
+            </ol>
             <p>投稿即代表您同意以上条款。</p>
           </div>
 
@@ -68,7 +71,29 @@
           </div>
         </form>
       </section>
+
+      <section class="history-card" aria-labelledby="history-title">
+        <div class="history-card__heading">
+          <div>
+            <p class="section-label">我的稿库</p>
+            <h2 id="history-title">历史投稿记录</h2>
+          </div>
+          <p>仅显示本设备浏览器提交过的稿件。</p>
+        </div>
+        <div id="history-list" class="history-list" aria-live="polite"></div>
+      </section>
     </main>
+
+    <template id="history-entry-template">
+      <article class="history-entry">
+        <div class="history-entry__meta">
+          <span class="history-entry__nickname"></span>
+          <time></time>
+        </div>
+        <p class="history-entry__content"></p>
+        <img alt="" />
+      </article>
+    </template>
 
     <script src="/app.js" defer></script>
   </body>
