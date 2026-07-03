@@ -41,12 +41,42 @@ function setMessage(text, type = "info") {
   message.dataset.type = type;
 }
 
+function lunarDayName(day) {
+  const digits = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+
+  if (day <= 10) {
+    return `初${digits[day]}`;
+  }
+
+  if (day < 20) {
+    return `十${digits[day - 10]}`;
+  }
+
+  if (day === 20) {
+    return "二十";
+  }
+
+  if (day < 30) {
+    return `廿${digits[day - 20]}`;
+  }
+
+  return "三十";
+}
+
 function lunarDate(date) {
   try {
-    return new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
+    const parts = new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
       month: "long",
       day: "numeric",
-    }).format(date);
+    }).formatToParts(date);
+    const month = parts.find((part) => part.type === "month")?.value;
+    const day = Number(parts.find((part) => part.type === "day")?.value);
+
+    if (!month || !Number.isInteger(day)) {
+      return "农历日期";
+    }
+
+    return `${month}${lunarDayName(day)}`;
   } catch {
     return "农历日期";
   }
@@ -154,6 +184,7 @@ form.addEventListener("submit", async (event) => {
 });
 
 renderDateLine();
+setInterval(renderDateLine, 60 * 1000);
 loadHistory().catch((error) => {
   setMessage(error.message, "error");
 });
