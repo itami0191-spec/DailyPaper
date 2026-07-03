@@ -11,13 +11,13 @@
       <header class="masthead">
         <div class="masthead__kicker">个人生活副刊</div>
         <h1>杭城日报</h1>
-        <p>记录今日所见、所闻、所想。版式取意中国报纸，内容由你亲手排印。</p>
+        <p>有什么想告诉我的新闻？</p>
       </header>
 
       <section class="editor-card" aria-labelledby="editor-title">
         <div>
           <p class="section-label">今日来稿</p>
-          <h2 id="editor-title">发表一篇新日记</h2>
+          <h2 id="editor-title">向本刊投递电子稿件</h2>
         </div>
 
         <form id="entry-form" class="entry-form">
@@ -56,27 +56,7 @@
           </div>
         </form>
       </section>
-
-      <section class="front-page" aria-labelledby="entries-title">
-        <div class="front-page__heading">
-          <p class="section-label">日记版</p>
-          <h2 id="entries-title">最新刊登</h2>
-        </div>
-        <div id="entries" class="entries" aria-live="polite"></div>
-      </section>
     </main>
-
-    <template id="entry-template">
-      <article class="entry">
-        <div class="entry__meta">
-          <span class="entry__nickname"></span>
-          <time></time>
-        </div>
-        <h3></h3>
-        <p class="entry__content"></p>
-        <img alt="" />
-      </article>
-    </template>
 
     <script src="/app.js" defer></script>
   </body>
