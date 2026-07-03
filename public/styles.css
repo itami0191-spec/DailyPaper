@@ -58,9 +58,10 @@ textarea {
 .masthead h1 {
   margin: 6px 0;
   color: var(--red);
+  font-family: "STKaiti", "KaiTi", "Kaiti SC", "楷体", cursive, serif;
   font-size: clamp(3.5rem, 11vw, 8.2rem);
   line-height: 0.95;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.08em;
   text-shadow: 2px 2px 0 rgba(35, 24, 21, 0.12);
 }
 
@@ -79,7 +80,7 @@ textarea {
 
 .editor-card {
   display: grid;
-  grid-template-columns: minmax(180px, 0.7fr) minmax(280px, 1.3fr);
+  grid-template-columns: minmax(240px, 0.65fr) minmax(280px, 1.35fr);
   gap: 24px;
 }
 
@@ -92,6 +93,12 @@ p {
 h2 {
   font-size: clamp(1.7rem, 4vw, 2.8rem);
   margin-bottom: 0;
+}
+
+#editor-title {
+  font-size: clamp(1.25rem, 2.2vw, 1.65rem);
+  line-height: 1.3;
+  white-space: nowrap;
 }
 
 .entry-form {
