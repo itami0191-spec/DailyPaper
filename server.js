@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 3000;
 const DATA_DIR = path.join(__dirname, "data");
 const UPLOAD_DIR = path.join(DATA_DIR, "uploads");
 const ENTRIES_FILE = path.join(DATA_DIR, "entries.json");
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
 
 const storage = multer.diskStorage({
   destination: (_req, _file, callback) => {
@@ -47,6 +48,10 @@ app.use(
 );
 app.use("/uploads", express.static(UPLOAD_DIR));
 
+app.get("/admin", (_req, res) => {
+  res.sendFile(path.join(__dirname, "public", "admin.html"));
+});
+
 async function ensureStorage() {
   await fs.mkdir(UPLOAD_DIR, { recursive: true });
 
@@ -76,8 +81,48 @@ function publicEntry(entry) {
   return rest;
 }
 
+function timingSafeEqualText(left, right) {
+  const leftBuffer = Buffer.from(left);
+  const rightBuffer = Buffer.from(right);
+
+  if (leftBuffer.length !== rightBuffer.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(leftBuffer, rightBuffer);
+}
+
+function verifyAdminPassword(req, res) {
+  if (!ADMIN_PASSWORD) {
+    res.status(503).json({ message: "后台密码尚未配置，请先设置 ADMIN_PASSWORD。" });
+    return false;
+  }
+
+  const password = sanitizeText(req.get("x-admin-password"));
+
+  if (!password || !timingSafeEqualText(password, ADMIN_PASSWORD)) {
+    res.status(401).json({ message: "后台密码不正确。" });
+    return false;
+  }
+
+  return true;
+}
+
 app.get("/api/entries", async (_req, res, next) => {
   try {
+    const entries = await readEntries();
+    res.json(entries.map(publicEntry));
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get("/api/admin/entries", async (req, res, next) => {
+  try {
+    if (!verifyAdminPassword(req, res)) {
+      return;
+    }
+
     const entries = await readEntries();
     res.json(entries.map(publicEntry));
   } catch (error) {

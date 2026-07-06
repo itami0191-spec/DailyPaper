@@ -9,6 +9,7 @@
 - 后端将日记记录保存到 `data/entries.json`
 - 上传图片保存到 `data/uploads/`
 - 中国报纸风格的版头、分栏、纸张纹理与红黑配色
+- 通过 `/admin` 后台管理页面查看所有投稿记录
 
 ## 本地运行
 
@@ -18,6 +19,38 @@ npm start
 ```
 
 然后打开 <http://localhost:3000>。
+
+## 后台管理
+
+后台地址：
+
+```text
+http://localhost:3000/admin
+```
+
+后台需要设置管理员密码。不要把密码写进 HTML 或 JS 文件里，启动服务前通过环境变量设置。
+
+macOS / Linux：
+
+```bash
+ADMIN_PASSWORD=你的后台密码 npm start
+```
+
+Windows CMD：
+
+```cmd
+set ADMIN_PASSWORD=你的后台密码
+npm start
+```
+
+Windows PowerShell：
+
+```powershell
+$env:ADMIN_PASSWORD="你的后台密码"
+npm start
+```
+
+部署到云服务器时，也需要在启动命令或进程管理工具里设置 `ADMIN_PASSWORD`。如果没有设置，后台会提示“后台密码尚未配置”。
 
 ## 数据说明
 

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>杭城日报后台</title>
+    <link rel="stylesheet" href="/styles.css?v=20260706-admin" />
+  </head>
+  <body>
+    <main class="paper-shell admin-shell">
+      <header class="masthead admin-masthead">
+        <div class="masthead__kicker">内部版面</div>
+        <h1>后台管理</h1>
+        <p>查看所有投稿记录与上传图片。</p>
+      </header>
+
+      <section class="admin-login-card" aria-labelledby="admin-login-title">
+        <div>
+          <p class="section-label">管理员入口</p>
+          <h2 id="admin-login-title">输入后台密码</h2>
+        </div>
+
+        <form id="admin-login-form" class="entry-form">
+          <label>
+            <span>后台密码</span>
+            <input
+              id="admin-password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="请输入 ADMIN_PASSWORD"
+              required
+            />
+          </label>
+
+          <div class="form-actions">
+            <p id="admin-message" role="status" aria-live="polite"></p>
+            <button type="submit">进入后台</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="admin-panel" class="admin-panel" aria-labelledby="admin-title" hidden>
+        <div class="admin-panel__heading">
+          <div>
+            <p class="section-label">全部来稿</p>
+            <h2 id="admin-title">投稿记录</h2>
+          </div>
+          <div class="admin-panel__actions">
+            <button id="refresh-admin-entries" type="button">刷新记录</button>
+            <button id="admin-logout" type="button" class="button-secondary">退出后台</button>
+          </div>
+        </div>
+
+        <div id="admin-summary" class="admin-summary"></div>
+        <div id="admin-entry-list" class="admin-entry-list" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <template id="admin-entry-template">
+      <article class="admin-entry">
+        <div class="admin-entry__meta">
+          <span class="admin-entry__nickname"></span>
+          <time></time>
+        </div>
+        <p class="admin-entry__content"></p>
+        <a class="admin-entry__image-link" target="_blank" rel="noopener">
+          <img alt="" />
+        </a>
+      </article>
+    </template>
+
+    <script src="/admin.js?v=20260706-admin" defer></script>
+  </body>
+</html>
