@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>杭城日报 DailyPaper</title>
-    <link rel="stylesheet" href="/styles.css?v=20260703-0837" />
+    <link rel="stylesheet" href="/styles.css?v=20260706-anonymous" />
   </head>
   <body>
     <main class="paper-shell">
@@ -22,7 +22,7 @@
         </div>
 
         <form id="entry-form" class="entry-form">
-          <label>
+          <div class="entry-form__field">
             <span>撰稿人</span>
             <input
               id="nickname"
@@ -31,7 +31,14 @@
               placeholder="例如：南城读报人"
               required
             />
-          </label>
+            <label class="anonymous-option">
+              <input id="is-anonymous" name="isAnonymous" type="checkbox" value="true" />
+              <span>匿名投稿</span>
+            </label>
+            <small id="anonymous-hint" class="anonymous-hint" hidden>
+              如选择匿名投稿，实体报纸将不会寄送到您手上。
+            </small>
+          </div>
 
           <label>
             <span>正文</span>
@@ -95,6 +102,6 @@
       </article>
     </template>
 
-    <script src="/app.js?v=20260703-0837" defer></script>
+    <script src="/app.js?v=20260706-anonymous" defer></script>
   </body>
 </html>

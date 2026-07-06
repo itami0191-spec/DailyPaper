@@ -3,6 +3,9 @@ const message = document.querySelector("#form-message");
 const dateLine = document.querySelector("#date-line");
 const historyList = document.querySelector("#history-list");
 const historyTemplate = document.querySelector("#history-entry-template");
+const nicknameInput = document.querySelector("#nickname");
+const anonymousCheckbox = document.querySelector("#is-anonymous");
+const anonymousHint = document.querySelector("#anonymous-hint");
 
 const CLIENT_ID_KEY = "dailyPaperClientId";
 
@@ -152,6 +155,20 @@ async function loadHistory() {
   renderHistory(await response.json());
 }
 
+function syncAnonymousState() {
+  const isAnonymous = anonymousCheckbox.checked;
+
+  nicknameInput.disabled = isAnonymous;
+  nicknameInput.required = !isAnonymous;
+  anonymousHint.hidden = !isAnonymous;
+
+  if (isAnonymous) {
+    nicknameInput.value = "";
+  }
+}
+
+anonymousCheckbox.addEventListener("change", syncAnonymousState);
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   setMessage("正在排版刊登...", "info");
@@ -174,6 +191,7 @@ form.addEventListener("submit", async (event) => {
     }
 
     form.reset();
+    syncAnonymousState();
     setMessage("稿件已收到。", "success");
     await loadHistory();
   } catch (error) {
@@ -185,6 +203,7 @@ form.addEventListener("submit", async (event) => {
 
 renderDateLine();
 setInterval(renderDateLine, 60 * 1000);
+syncAnonymousState();
 loadHistory().catch((error) => {
   setMessage(error.message, "error");
 });

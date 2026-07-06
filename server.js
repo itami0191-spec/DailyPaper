@@ -151,8 +151,10 @@ app.post("/api/entries", upload.single("image"), async (req, res, next) => {
     const nickname = sanitizeText(req.body.nickname);
     const content = sanitizeText(req.body.content);
     const clientId = sanitizeText(req.body.clientId);
+    const isAnonymous = sanitizeText(req.body.isAnonymous) === "true";
+    const displayName = isAnonymous ? "匿名" : nickname;
 
-    if (!nickname || nickname.length > 24) {
+    if (!isAnonymous && (!nickname || nickname.length > 24)) {
       res.status(400).json({ message: "撰稿人不能为空，且不能超过 24 个字符。" });
       return;
     }
@@ -171,7 +173,8 @@ app.post("/api/entries", upload.single("image"), async (req, res, next) => {
     const entry = {
       id: crypto.randomUUID(),
       clientId,
-      nickname,
+      nickname: displayName,
+      isAnonymous,
       content,
       imageUrl: req.file ? `/uploads/${req.file.filename}` : null,
       createdAt: new Date().toISOString(),
