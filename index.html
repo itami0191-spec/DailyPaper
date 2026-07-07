@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ポイントガチャ模拟器</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero__copy">
+          <p class="eyebrow">Fan-made web simulator</p>
+          <h1 id="page-title">ポイントガチャ模拟器</h1>
+          <p class="lead">
+            参考《魔法使いの約束》的ポイントガチャ机制制作：只包含 N / R，
+            单抽 200pt，十连 2,000pt。页面不使用官方素材，仅模拟概率与抽卡节奏。
+          </p>
+          <div class="rate-card" aria-label="提供割合">
+            <div>
+              <span class="rate-card__label">R</span>
+              <strong>7.0%</strong>
+            </div>
+            <div>
+              <span class="rate-card__label">N</span>
+              <strong>93.0%</strong>
+            </div>
+          </div>
+        </div>
+
+        <aside class="panel rules">
+          <h2>池子规则</h2>
+          <ul>
+            <li>只做通常ポイントガチャ，不含活动特别点数池。</li>
+            <li>无 SR / SSR，无保底，无 UP。</li>
+            <li>N 为 21 人基础卡，R 为通常ガチャ R 文字卡。</li>
+            <li>概率为公开 Wiki 的检证参考值，非官方保证值。</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section class="summon panel" aria-labelledby="summon-title">
+        <div class="summon__header">
+          <div>
+            <p class="eyebrow">Point balance</p>
+            <h2 id="summon-title"><span id="points">20,000</span> pt</h2>
+          </div>
+          <button id="reset" class="button button--ghost" type="button">重置</button>
+        </div>
+
+        <div class="summon-stage" id="stage" aria-live="polite">
+          <div class="gate">
+            <div class="gate__moon"></div>
+            <div class="gate__ring gate__ring--outer"></div>
+            <div class="gate__ring gate__ring--inner"></div>
+            <div class="gate__slab" id="slab">POINT</div>
+            <div class="gate__sparkles" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <p id="stage-text">点击抽卡，点亮石板。</p>
+        </div>
+
+        <div class="actions">
+          <button id="single" class="button" type="button">单抽 200pt</button>
+          <button id="ten" class="button button--primary" type="button">十连 2,000pt</button>
+          <button id="skip" class="button button--ghost" type="button" hidden>跳过动画</button>
+        </div>
+      </section>
+
+      <section class="results panel" aria-labelledby="results-title">
+        <div class="results__header">
+          <div>
+            <p class="eyebrow">Result</p>
+            <h2 id="results-title">抽卡结果</h2>
+          </div>
+          <div class="summary" id="summary">尚未抽卡</div>
+        </div>
+
+        <div id="cards" class="cards" aria-live="polite"></div>
+      </section>
+
+      <section class="stats panel" aria-labelledby="stats-title">
+        <h2 id="stats-title">累计统计</h2>
+        <div class="stats-grid">
+          <div>
+            <span>总抽数</span>
+            <strong id="total-pulls">0</strong>
+          </div>
+          <div>
+            <span>R</span>
+            <strong id="total-r">0</strong>
+          </div>
+          <div>
+            <span>N</span>
+            <strong id="total-n">0</strong>
+          </div>
+          <div>
+            <span>当前 R 率</span>
+            <strong id="r-rate">0.0%</strong>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
