@@ -312,6 +312,20 @@ h2 {
   gap: 12px;
 }
 
+.runtime-status {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.runtime-status--ready {
+  color: #aef2c2;
+}
+
+.runtime-status--error {
+  color: var(--danger);
+}
+
 .button {
   min-height: 48px;
   padding: 0 20px;

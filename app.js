@@ -63,6 +63,7 @@ const elements = {
   single: document.querySelector("#single"),
   ten: document.querySelector("#ten"),
   skip: document.querySelector("#skip"),
+  runtimeStatus: document.querySelector("#runtime-status"),
   stage: document.querySelector("#stage"),
   slab: document.querySelector("#slab"),
   stageText: document.querySelector("#stage-text"),
@@ -116,6 +117,11 @@ function updateUi() {
 
   elements.single.disabled = state.isAnimating || state.points < POINTS.single;
   elements.ten.disabled = state.isAnimating || state.points < POINTS.ten;
+}
+
+function setRuntimeStatus(message, type = "ready") {
+  elements.runtimeStatus.textContent = message;
+  elements.runtimeStatus.className = `runtime-status runtime-status--${type}`;
 }
 
 function clearAnimationQueue() {
@@ -208,6 +214,16 @@ function pull(count) {
   revealSequentially(results);
 }
 
+function safelyRun(action) {
+  try {
+    action();
+  } catch (error) {
+    console.error(error);
+    setRuntimeStatus("脚本运行出错，请刷新页面后重试。", "error");
+    setSummoning(false, false);
+  }
+}
+
 function reset() {
   clearAnimationQueue();
   state.points = POINTS.initial;
@@ -220,9 +236,10 @@ function reset() {
   setSummoning(false, false);
 }
 
-elements.single.addEventListener("click", () => pull(1));
-elements.ten.addEventListener("click", () => pull(10));
-elements.skip.addEventListener("click", () => revealAll(state.currentResults));
-elements.reset.addEventListener("click", reset);
+elements.single.addEventListener("click", () => safelyRun(() => pull(1)));
+elements.ten.addEventListener("click", () => safelyRun(() => pull(10)));
+elements.skip.addEventListener("click", () => safelyRun(() => revealAll(state.currentResults)));
+elements.reset.addEventListener("click", () => safelyRun(reset));
 
 updateUi();
+setRuntimeStatus("脚本已就绪，可以抽卡。");
