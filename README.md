@@ -31,25 +31,3 @@ python3 -m http.server 8000
 ```
 
 然后访问 `http://localhost:8000`。
-
-## 独立成新仓库
-
-如果要从当前 `DailyPaper` 仓库独立出来，可以新建一个 GitHub 仓库，然后把这些文件复制进去：
-
-- `index.html`
-- `styles.css`
-- `app.js`
-- `README.md`
-- `.nojekyll`
-
-也可以直接把当前分支作为静态站点源码导入新仓库。
-
-## GitHub Pages 部署
-
-新仓库创建后，在 GitHub 仓库设置中打开：
-
-```text
-Settings -> Pages -> Build and deployment -> Deploy from a branch
-```
-
-选择包含这些文件的分支和根目录 `/` 即可。
