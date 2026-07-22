@@ -63,6 +63,7 @@ function renderEntries(entries) {
     const node = entryTemplate.content.cloneNode(true);
     const nickname = node.querySelector(".admin-entry__nickname");
     const time = node.querySelector("time");
+    const contact = node.querySelector(".admin-entry__contact");
     const content = node.querySelector(".admin-entry__content");
     const imageLink = node.querySelector(".admin-entry__image-link");
     const image = node.querySelector("img");
@@ -70,6 +71,7 @@ function renderEntries(entries) {
     nickname.textContent = entry.nickname;
     time.dateTime = entry.createdAt;
     time.textContent = timeFormatter.format(new Date(entry.createdAt));
+    contact.textContent = `联系方式：${entry.contact || "未填写"}`;
     content.textContent = entry.content;
 
     if (entry.imageUrl) {

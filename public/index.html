@@ -4,12 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>友邻通讯 DailyPaper</title>
-    <link rel="stylesheet" href="/styles.css?v=20260706-anonymous" />
+    <link rel="stylesheet" href="/styles.css?v=20260722-contact" />
   </head>
   <body>
     <main class="paper-shell">
       <header class="masthead">
-        <div class="masthead__kicker">个人生活副刊</div>
         <h1>友邻通讯</h1>
         <p>有什么想告诉我的新闻？</p>
         <div id="date-line" class="date-line" aria-label="今日日期"></div>
@@ -39,6 +38,17 @@
               如选择匿名投稿，实体报纸将不会寄送到您手上。
             </small>
           </div>
+
+          <label>
+            <span>联系方式</span>
+            <input
+              id="contact"
+              name="contact"
+              maxlength="120"
+              placeholder="手机号、微信号、邮箱或邮寄地址"
+            />
+            <small>仅作赠送实体报纸时联络使用，不会公开。</small>
+          </label>
 
           <label>
             <span>正文</span>
@@ -102,6 +112,6 @@
       </article>
     </template>
 
-    <script src="/app.js?v=20260706-anonymous" defer></script>
+    <script src="/app.js?v=20260722-contact" defer></script>
   </body>
 </html>

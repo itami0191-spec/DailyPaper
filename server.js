@@ -77,6 +77,11 @@ function sanitizeText(value) {
 }
 
 function publicEntry(entry) {
+  const { clientId, contact, ...rest } = entry;
+  return rest;
+}
+
+function adminEntry(entry) {
   const { clientId, ...rest } = entry;
   return rest;
 }
@@ -111,7 +116,7 @@ function verifyAdminPassword(req, res) {
 app.get("/api/entries", async (_req, res, next) => {
   try {
     const entries = await readEntries();
-    res.json(entries.map(publicEntry));
+    res.json(entries.map(adminEntry));
   } catch (error) {
     next(error);
   }
@@ -149,6 +154,7 @@ app.get("/api/my-entries", async (req, res, next) => {
 app.post("/api/entries", upload.single("image"), async (req, res, next) => {
   try {
     const nickname = sanitizeText(req.body.nickname);
+    const contact = sanitizeText(req.body.contact);
     const content = sanitizeText(req.body.content);
     const clientId = sanitizeText(req.body.clientId);
     const isAnonymous = sanitizeText(req.body.isAnonymous) === "true";
@@ -164,6 +170,11 @@ app.post("/api/entries", upload.single("image"), async (req, res, next) => {
       return;
     }
 
+    if (contact.length > 120) {
+      res.status(400).json({ message: "联系方式不能超过 120 个字符。" });
+      return;
+    }
+
     if (!clientId || clientId.length > 80) {
       res.status(400).json({ message: "无法识别当前浏览器，请刷新页面后再投稿。" });
       return;
@@ -175,6 +186,7 @@ app.post("/api/entries", upload.single("image"), async (req, res, next) => {
       clientId,
       nickname: displayName,
       isAnonymous,
+      contact,
       content,
       imageUrl: req.file ? `/uploads/${req.file.filename}` : null,
       createdAt: new Date().toISOString(),
