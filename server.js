@@ -116,7 +116,7 @@ function verifyAdminPassword(req, res) {
 app.get("/api/entries", async (_req, res, next) => {
   try {
     const entries = await readEntries();
-    res.json(entries.map(adminEntry));
+    res.json(entries.map(publicEntry));
   } catch (error) {
     next(error);
   }
@@ -129,7 +129,7 @@ app.get("/api/admin/entries", async (req, res, next) => {
     }
 
     const entries = await readEntries();
-    res.json(entries.map(publicEntry));
+    res.json(entries.map(adminEntry));
   } catch (error) {
     next(error);
   }
