@@ -126,13 +126,19 @@ function renderHistory(entries) {
     const node = historyTemplate.content.cloneNode(true);
     const nickname = node.querySelector(".history-entry__nickname");
     const time = node.querySelector("time");
+    const title = node.querySelector(".history-entry__title");
     const content = node.querySelector(".history-entry__content");
     const image = node.querySelector("img");
 
     nickname.textContent = entry.nickname;
     time.dateTime = entry.createdAt;
     time.textContent = timeFormatter.format(new Date(entry.createdAt));
+    title.textContent = entry.title || "";
     content.textContent = entry.content;
+
+    if (!entry.title) {
+      title.remove();
+    }
 
     if (entry.imageUrl) {
       image.src = entry.imageUrl;

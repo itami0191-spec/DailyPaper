@@ -155,6 +155,7 @@ app.post("/api/entries", upload.single("image"), async (req, res, next) => {
   try {
     const nickname = sanitizeText(req.body.nickname);
     const contact = sanitizeText(req.body.contact);
+    const title = sanitizeText(req.body.title);
     const content = sanitizeText(req.body.content);
     const clientId = sanitizeText(req.body.clientId);
     const isAnonymous = sanitizeText(req.body.isAnonymous) === "true";
@@ -175,6 +176,11 @@ app.post("/api/entries", upload.single("image"), async (req, res, next) => {
       return;
     }
 
+    if (title.length > 60) {
+      res.status(400).json({ message: "标题不能超过 60 个字符。" });
+      return;
+    }
+
     if (!clientId || clientId.length > 80) {
       res.status(400).json({ message: "无法识别当前浏览器，请刷新页面后再投稿。" });
       return;
@@ -187,6 +193,7 @@ app.post("/api/entries", upload.single("image"), async (req, res, next) => {
       nickname: displayName,
       isAnonymous,
       contact,
+      title,
       content,
       imageUrl: req.file ? `/uploads/${req.file.filename}` : null,
       createdAt: new Date().toISOString(),

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>友邻通讯 DailyPaper</title>
-    <link rel="stylesheet" href="/styles.css?v=20260722-contact" />
+    <link rel="stylesheet" href="/styles.css?v=20260722-title" />
   </head>
   <body>
     <main class="paper-shell">
@@ -48,6 +48,16 @@
               placeholder="手机号、微信号、邮箱或邮寄地址"
             />
             <small>仅作赠送实体报纸时联络使用，不会公开。</small>
+          </label>
+
+          <label>
+            <span>标题（选填）</span>
+            <input
+              id="entry-title"
+              name="title"
+              maxlength="60"
+              placeholder="给这篇稿件起个标题"
+            />
           </label>
 
           <label>
@@ -107,11 +117,12 @@
           <span class="history-entry__nickname"></span>
           <time></time>
         </div>
+        <h3 class="history-entry__title"></h3>
         <p class="history-entry__content"></p>
         <img alt="" />
       </article>
     </template>
 
-    <script src="/app.js?v=20260722-contact" defer></script>
+    <script src="/app.js?v=20260722-title" defer></script>
   </body>
 </html>

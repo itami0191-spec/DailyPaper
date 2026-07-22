@@ -232,6 +232,14 @@ h2 {
   font-weight: 700;
 }
 
+.history-entry__title,
+.admin-entry__title {
+  margin: 10px 0 0;
+  color: var(--ink);
+  font-size: 1.18rem;
+  line-height: 1.35;
+}
+
 .history-entry__content {
   margin: 10px 0 0;
   white-space: pre-wrap;
