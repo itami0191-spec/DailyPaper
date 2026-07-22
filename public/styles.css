@@ -58,11 +58,14 @@ textarea {
 .masthead h1 {
   margin: 6px 0;
   color: var(--red);
-  font-family: "STKaiti", "KaiTi", "Kaiti SC", "楷体", cursive, serif;
+  font-family: "Ma Shan Zheng", "STXingkai", "STKaiti", "KaiTi", "Kaiti SC", "楷体", cursive, serif;
   font-size: clamp(3.5rem, 11vw, 8.2rem);
   line-height: 0.95;
-  letter-spacing: 0.08em;
-  text-shadow: 2px 2px 0 rgba(35, 24, 21, 0.12);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-shadow:
+    2px 2px 0 rgba(35, 24, 21, 0.12),
+    0 4px 12px rgba(168, 35, 24, 0.16);
 }
 
 .masthead p {
