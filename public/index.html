@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>友邻通讯 DailyPaper</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css?v=20260722-mobile-font" />
+  </head>
+  <body>
+    <main class="paper-shell">
+      <header class="masthead">
+        <h1>友邻通讯</h1>
+        <p>有什么想告诉我的新闻？</p>
+        <div id="date-line" class="date-line" aria-label="今日日期"></div>
+      </header>
+
+      <section class="editor-card" aria-labelledby="editor-title">
+        <div>
+          <p class="section-label">今日来稿</p>
+          <h2 id="editor-title">向本刊投递电子稿件</h2>
+        </div>
+
+        <form id="entry-form" class="entry-form">
+          <div class="entry-form__field">
+            <span>撰稿人</span>
+            <input
+              id="nickname"
+              name="nickname"
+              maxlength="24"
+              placeholder="例如：南城读报人"
+              required
+            />
+            <label class="anonymous-option">
+              <input id="is-anonymous" name="isAnonymous" type="checkbox" value="true" />
+              <span>匿名投稿</span>
+            </label>
+            <small id="anonymous-hint" class="anonymous-hint" hidden>
+              如选择匿名投稿，实体报纸将不会寄送到您手上。
+            </small>
+          </div>
+
+          <label>
+            <span>联系方式</span>
+            <input
+              id="contact"
+              name="contact"
+              maxlength="120"
+              placeholder="手机号、微信号、邮箱或邮寄地址"
+            />
+            <small>仅作赠送实体报纸时联络使用，不会公开。</small>
+          </label>
+
+          <label>
+            <span>标题（选填）</span>
+            <input
+              id="entry-title"
+              name="title"
+              maxlength="60"
+              placeholder="给这篇稿件起个标题"
+            />
+          </label>
+
+          <label>
+            <span>正文</span>
+            <textarea
+              id="content"
+              name="content"
+              maxlength="2000"
+              placeholder="写下今天值得刊登的一段话..."
+              required
+            ></textarea>
+            <small>请保证您输入的内容可以公开。</small>
+          </label>
+
+          <label class="file-input">
+            <span>图片</span>
+            <input id="image" name="image" type="file" accept="image/*" />
+            <small>可选，支持常见图片格式，单张不超过 5MB。</small>
+          </label>
+
+          <div class="submission-notice">
+            <p>
+              投稿将印制成实体报纸，赠送给所有投稿者（包括互相不认识的朋友）。请仅提交您愿意被公开的内容。
+            </p>
+            <ol>
+              <li>您的文字、图片、署名将出现在报纸上，被所有读者看到</li>
+              <li>后台会保存您的投稿，仅用于报纸制作，不作他用</li>
+              <li>您可选择实名、昵称或匿名</li>
+              <li>报纸印刷后内容无法撤回或修改</li>
+              <li>请勿提交他人隐私或未经授权的照片</li>
+            </ol>
+            <p>投稿即代表您同意以上条款。</p>
+          </div>
+
+          <div class="form-actions">
+            <p id="form-message" role="status" aria-live="polite"></p>
+            <button type="submit">刊登日记</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="history-card" aria-labelledby="history-title">
+        <div class="history-card__heading">
+          <div>
+            <p class="section-label">我的稿库</p>
+            <h2 id="history-title">历史投稿记录</h2>
+          </div>
+          <p>仅显示本设备浏览器提交过的稿件。</p>
+        </div>
+        <div id="history-list" class="history-list" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <template id="history-entry-template">
+      <article class="history-entry">
+        <div class="history-entry__meta">
+          <span class="history-entry__nickname"></span>
+          <time></time>
+        </div>
+        <h3 class="history-entry__title"></h3>
+        <p class="history-entry__content"></p>
+        <img alt="" />
+      </article>
+    </template>
+
+    <script src="/app.js?v=20260723-client-id" defer></script>
+  </body>
+</html>

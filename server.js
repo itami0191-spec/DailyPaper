@@ -1,0 +1,235 @@
+const crypto = require("node:crypto");
+const fs = require("node:fs/promises");
+const path = require("node:path");
+
+const express = require("express");
+const multer = require("multer");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+const DATA_DIR = path.join(__dirname, "data");
+const UPLOAD_DIR = path.join(DATA_DIR, "uploads");
+const ENTRIES_FILE = path.join(DATA_DIR, "entries.json");
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
+
+const storage = multer.diskStorage({
+  destination: (_req, _file, callback) => {
+    callback(null, UPLOAD_DIR);
+  },
+  filename: (_req, file, callback) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    callback(null, `${Date.now()}-${crypto.randomUUID()}${ext}`);
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+    files: 1,
+  },
+  fileFilter: (_req, file, callback) => {
+    if (!file.mimetype.startsWith("image/")) {
+      callback(new Error("只能上传图片文件。"));
+      return;
+    }
+
+    callback(null, true);
+  },
+});
+
+app.use(
+  express.static(path.join(__dirname, "public"), {
+    setHeaders: (res) => {
+      res.setHeader("Cache-Control", "no-store");
+    },
+  }),
+);
+app.use("/uploads", express.static(UPLOAD_DIR));
+
+app.get("/admin", (_req, res) => {
+  res.sendFile(path.join(__dirname, "public", "admin.html"));
+});
+
+async function ensureStorage() {
+  await fs.mkdir(UPLOAD_DIR, { recursive: true });
+
+  try {
+    await fs.access(ENTRIES_FILE);
+  } catch {
+    await fs.writeFile(ENTRIES_FILE, "[]\n", "utf8");
+  }
+}
+
+async function readEntries() {
+  await ensureStorage();
+  const raw = await fs.readFile(ENTRIES_FILE, "utf8");
+  return JSON.parse(raw);
+}
+
+async function writeEntries(entries) {
+  await fs.writeFile(ENTRIES_FILE, `${JSON.stringify(entries, null, 2)}\n`, "utf8");
+}
+
+function sanitizeText(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function publicEntry(entry) {
+  const { clientId, contact, ...rest } = entry;
+  return rest;
+}
+
+function adminEntry(entry) {
+  const { clientId, ...rest } = entry;
+  return rest;
+}
+
+function timingSafeEqualText(left, right) {
+  const leftBuffer = Buffer.from(left);
+  const rightBuffer = Buffer.from(right);
+
+  if (leftBuffer.length !== rightBuffer.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(leftBuffer, rightBuffer);
+}
+
+function verifyAdminPassword(req, res) {
+  if (!ADMIN_PASSWORD) {
+    res.status(503).json({ message: "后台密码尚未配置，请先设置 ADMIN_PASSWORD。" });
+    return false;
+  }
+
+  const password = sanitizeText(req.get("x-admin-password"));
+
+  if (!password || !timingSafeEqualText(password, ADMIN_PASSWORD)) {
+    res.status(401).json({ message: "后台密码不正确。" });
+    return false;
+  }
+
+  return true;
+}
+
+app.get("/api/entries", async (_req, res, next) => {
+  try {
+    const entries = await readEntries();
+    res.json(entries.map(publicEntry));
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get("/api/admin/entries", async (req, res, next) => {
+  try {
+    if (!verifyAdminPassword(req, res)) {
+      return;
+    }
+
+    const entries = await readEntries();
+    res.json(entries.map(adminEntry));
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get("/api/my-entries", async (req, res, next) => {
+  try {
+    const clientId = sanitizeText(req.query.clientId);
+
+    if (!clientId || clientId.length > 80) {
+      res.status(400).json({ message: "无法识别当前浏览器的投稿记录。" });
+      return;
+    }
+
+    const entries = await readEntries();
+    res.json(entries.filter((entry) => entry.clientId === clientId).map(publicEntry));
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post("/api/entries", upload.single("image"), async (req, res, next) => {
+  try {
+    const nickname = sanitizeText(req.body.nickname);
+    const contact = sanitizeText(req.body.contact);
+    const title = sanitizeText(req.body.title);
+    const content = sanitizeText(req.body.content);
+    const clientId = sanitizeText(req.body.clientId);
+    const isAnonymous = sanitizeText(req.body.isAnonymous) === "true";
+    const displayName = isAnonymous ? "匿名" : nickname;
+
+    if (!isAnonymous && (!nickname || nickname.length > 24)) {
+      res.status(400).json({ message: "撰稿人不能为空，且不能超过 24 个字符。" });
+      return;
+    }
+
+    if (!content || content.length > 2000) {
+      res.status(400).json({ message: "日记正文不能为空，且不能超过 2000 个字符。" });
+      return;
+    }
+
+    if (contact.length > 120) {
+      res.status(400).json({ message: "联系方式不能超过 120 个字符。" });
+      return;
+    }
+
+    if (title.length > 60) {
+      res.status(400).json({ message: "标题不能超过 60 个字符。" });
+      return;
+    }
+
+    if (!clientId || clientId.length > 80) {
+      res.status(400).json({ message: "无法识别当前浏览器，请刷新页面后再投稿。" });
+      return;
+    }
+
+    const entries = await readEntries();
+    const entry = {
+      id: crypto.randomUUID(),
+      clientId,
+      nickname: displayName,
+      isAnonymous,
+      contact,
+      title,
+      content,
+      imageUrl: req.file ? `/uploads/${req.file.filename}` : null,
+      createdAt: new Date().toISOString(),
+    };
+
+    entries.unshift(entry);
+    await writeEntries(entries);
+
+    res.status(201).json(publicEntry(entry));
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.use((error, _req, res, _next) => {
+  if (error instanceof multer.MulterError) {
+    res.status(400).json({ message: "图片不能超过 5MB，且每次只能上传 1 张。" });
+    return;
+  }
+
+  if (error.message === "只能上传图片文件。") {
+    res.status(400).json({ message: error.message });
+    return;
+  }
+
+  console.error(error);
+  res.status(500).json({ message: "服务器暂时无法保存日记，请稍后再试。" });
+});
+
+ensureStorage()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`DailyPaper is running at http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("Failed to initialize storage.", error);
+    process.exit(1);
+  });
