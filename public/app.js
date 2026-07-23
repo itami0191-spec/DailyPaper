@@ -25,6 +25,23 @@ const timeFormatter = new Intl.DateTimeFormat("zh-CN", {
   minute: "2-digit",
 });
 
+function fallbackId() {
+  const browserCrypto = globalThis.crypto;
+
+  if (browserCrypto?.getRandomValues) {
+    const values = new Uint32Array(4);
+    browserCrypto.getRandomValues(values);
+    return Array.from(values, (value) => value.toString(16).padStart(8, "0")).join("-");
+  }
+
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function createClientId() {
+  const browserCrypto = globalThis.crypto;
+  return browserCrypto?.randomUUID ? browserCrypto.randomUUID() : fallbackId();
+}
+
 function getClientId() {
   const savedClientId = localStorage.getItem(CLIENT_ID_KEY);
 
@@ -32,7 +49,7 @@ function getClientId() {
     return savedClientId;
   }
 
-  const clientId = crypto.randomUUID();
+  const clientId = createClientId();
   localStorage.setItem(CLIENT_ID_KEY, clientId);
   return clientId;
 }
